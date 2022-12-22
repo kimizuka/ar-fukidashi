@@ -74,30 +74,16 @@
     let width = 0;
     let height = 0;
     let img;
-    let analyser;
     let serif = 'balloon';
     let timer;
 
     recognition.lang = 'ja';
 
-    navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: false
-    }).then(function(stream) {
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const source = audioCtx.createMediaStreamSource(stream);
-
-      analyser = audioCtx.createAnalyser(stream);
-
-      analyser.fftSize = 1024;
-
-      source.connect(analyser);
-    });
-
-    document.body.onload = function() {
+    document.body.onload = () => {
       txt = document.getElementById('txt');
 
-      recognition.addEventListener('result', function(evt) {
+      recognition.addEventListener('result', (evt) => {
+        console.log(evt);
         const transcript = evt.results[0][0].transcript;
 
         if (transcript) {
@@ -153,14 +139,7 @@
           return;
         }
 
-        if (!analyser) {
-          return;
-        }
-
-        const data = new Uint8Array(1);
         const fontSize = getFontSize(text.length);
-
-        analyser.getByteFrequencyData(data);
 
         this.canvas.width = 1000;
         this.canvas.height = 600;
